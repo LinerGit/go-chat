@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/LinerGit/chat-service/internal/hub"
-	"github.com/LinerGit/chat-service/internal/middleware"
-	"github.com/LinerGit/chat-service/internal/service"
+	"github.com/LinerGit/go-chat/internal/hub"
+	"github.com/LinerGit/go-chat/internal/middleware"
+	"github.com/LinerGit/go-chat/internal/service"
 	"github.com/go-chi/render"
 	"github.com/gorilla/websocket"
 )

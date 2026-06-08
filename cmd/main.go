@@ -10,13 +10,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/LinerGit/chat-service/internal/config"
-	"github.com/LinerGit/chat-service/internal/database"
-	"github.com/LinerGit/chat-service/internal/handler"
-	"github.com/LinerGit/chat-service/internal/hub"
-	authmw "github.com/LinerGit/chat-service/internal/middleware"
-	"github.com/LinerGit/chat-service/internal/repository"
-	"github.com/LinerGit/chat-service/internal/service"
+	"github.com/LinerGit/go-chat/internal/config"
+	"github.com/LinerGit/go-chat/internal/database"
+	"github.com/LinerGit/go-chat/internal/handler"
+	"github.com/LinerGit/go-chat/internal/hub"
+	authmw "github.com/LinerGit/go-chat/internal/middleware"
+	"github.com/LinerGit/go-chat/internal/repository"
+	"github.com/LinerGit/go-chat/internal/service"
 )
 
 func main() {

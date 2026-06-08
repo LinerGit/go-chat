@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	authmw "github.com/LinerGit/chat-service/internal/middleware"
+	authmw "github.com/LinerGit/go-chat/internal/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )

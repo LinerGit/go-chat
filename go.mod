@@ -1,4 +1,4 @@
-module go-chat
+module github.com/LinerGit/go-chat
 
 go 1.25.0
 

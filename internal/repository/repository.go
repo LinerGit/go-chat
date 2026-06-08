@@ -3,8 +3,8 @@ package repository
 import (
 	"context"
 
-	"github.com/LinerGit/chat-service/internal/model"
-	db "github.com/LinerGit/chat-service/internal/repository/db"
+	"github.com/LinerGit/go-chat/internal/model"
+	db "github.com/LinerGit/go-chat/internal/repository/db"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
