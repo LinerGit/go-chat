@@ -8,3 +8,4 @@ CREATE TABLE IF NOT EXISTS messages (
 
 CREATE INDEX idx_messages_created_at ON messages (created_at DESC);
 CREATE INDEX idx_messages_user_id    ON messages (user_id);
+

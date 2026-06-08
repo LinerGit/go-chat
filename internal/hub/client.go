@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const sendBufferSize = 256
@@ -59,11 +60,11 @@ type incomingMessage struct {
 }
 
 type OutgoingMessage struct {
-	Type       string    `json:"type"`
-	FromUserID int64     `json:"from_user_id"`
-	Username   string    `json:"username"`
-	Content    string    `json:"content"`
-	Timestamp  time.Time `json:"timestamp"`
+	Type       string           `json:"type"`
+	FromUserID int64            `json:"from_user_id"`
+	Username   string           `json:"username"`
+	Content    string           `json:"content"`
+	Timestamp  pgtype.Timestamp `json:"timestamp"`
 }
 
 // ReadPump reads messages from the WebSocket connection.

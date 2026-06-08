@@ -9,9 +9,23 @@ import (
 )
 
 type MessageRepository interface {
-	Create(ctx context.Context, userID int64, username, content string) (model.Message, error)
-	GetLast(ctx context.Context, limit int32) ([]model.Message, error)
-	GetByUserID(ctx context.Context, userID int64, limit int32) ([]model.Message, error)
+	CreateMessage(
+		ctx context.Context,
+		userID int64,
+		username string,
+		content string,
+	) (model.Message, error)
+
+	GetLastMessages(
+		ctx context.Context,
+		limit int32,
+	) ([]model.Message, error)
+
+	GetMessagesByUserID(
+		ctx context.Context,
+		userID int64,
+		limit int32,
+	) ([]model.Message, error)
 }
 
 type messageRepository struct {
@@ -22,7 +36,7 @@ func NewMessageRepository(pool *pgxpool.Pool) MessageRepository {
 	return &messageRepository{q: db.New(pool)}
 }
 
-func (r *messageRepository) Create(ctx context.Context, userID int64, username, content string) (model.Message, error) {
+func (r *messageRepository) CreateMessage(ctx context.Context, userID int64, username, content string) (model.Message, error) {
 	row, err := r.q.CreateMessage(ctx, db.CreateMessageParams{
 		UserID:   userID,
 		Username: username,
@@ -40,7 +54,7 @@ func (r *messageRepository) Create(ctx context.Context, userID int64, username, 
 	}, nil
 }
 
-func (r *messageRepository) GetLast(ctx context.Context, limit int32) ([]model.Message, error) {
+func (r *messageRepository) GetLastMessages(ctx context.Context, limit int32) ([]model.Message, error) {
 	rows, err := r.q.GetLastMessages(ctx, limit)
 	if err != nil {
 		return nil, err
@@ -48,7 +62,7 @@ func (r *messageRepository) GetLast(ctx context.Context, limit int32) ([]model.M
 	return mapMessages(rows), nil
 }
 
-func (r *messageRepository) GetByUserID(ctx context.Context, userID int64, limit int32) ([]model.Message, error) {
+func (r *messageRepository) GetMessagesByUserID(ctx context.Context, userID int64, limit int32) ([]model.Message, error) {
 	rows, err := r.q.GetMessagesByUserID(ctx, db.GetMessagesByUserIDParams{
 		UserID: userID,
 		Limit:  limit,

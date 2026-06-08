@@ -59,6 +59,10 @@ func (h *Hub) Run() {
 				case client.send <- message:
 				default:
 					// client's buffer full — drop and unregister
+					h.log.Warn(
+						"client buffer overflow",
+						"user_id", client.userID,
+					)
 					h.mu.RUnlock()
 					h.mu.Lock()
 					delete(h.clients, client)
