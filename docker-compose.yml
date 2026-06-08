@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  chat-service:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      PORT:          "8080"
+      DB_DSN:        "postgres://postgres:postgres@postgres:5432/chatdb?sslmode=disable"
+      JWT_SECRET:    "${JWT_SECRET}"
+      MAX_MSG_LEN:   "4096"
+      HISTORY_LIMIT: "50"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  migrate:
+    image: migrate/migrate:v4.17.1
+    volumes:
+      - ./migrations:/migrations
+    command: >
+      -path=/migrations
+      -database=postgres://postgres:postgres@postgres:5432/chatdb?sslmode=disable
+      up
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB:       chatdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout:  5s
+      retries:  5
+
+volumes:
+  pgdata:
