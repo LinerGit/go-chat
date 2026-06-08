@@ -53,25 +53,34 @@ func (h *Hub) Run() {
 			)
 
 		case message := <-h.broadcast:
+			// FIX 4: collect overflow clients into a slice first, then unregister them
+			// after releasing the read lock. The previous code upgraded RLock→Lock inside
+			// the range loop which (a) is not allowed by sync.RWMutex and causes a deadlock
+			// when other goroutines hold read locks, and (b) closed client.send directly
+			// while ReadPump's deferred Unregister could also close it — a double-close
+			// data race that panics at runtime.
+			var overflow []*Client
+
 			h.mu.RLock()
 			for client := range h.clients {
 				select {
 				case client.send <- message:
 				default:
-					// client's buffer full — drop and unregister
 					h.log.Warn(
 						"client buffer overflow",
 						"user_id", client.userID,
 					)
-					h.mu.RUnlock()
-					h.mu.Lock()
-					delete(h.clients, client)
-					close(client.send)
-					h.mu.Unlock()
-					h.mu.RLock()
+					overflow = append(overflow, client)
 				}
 			}
 			h.mu.RUnlock()
+
+			// Unregister overflowed clients through the normal channel so the
+			// unregister case (which already holds the write lock safely) handles
+			// the delete+close — no double-close, no lock inversion.
+			for _, client := range overflow {
+				h.unregister <- client
+			}
 		}
 	}
 }
